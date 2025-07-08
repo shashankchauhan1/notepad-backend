@@ -9,12 +9,24 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors(
-  {
-  origin: "https://nottepreziosa.netlify.app",
+const allowedOrigins = [
+  "https://nottepreziosa.netlify.app",
+  "http://localhost:5173"
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
-}
-));
+};
+
+app.use(cors(corsOptions));
+
 
 app.use(express.json());
 
